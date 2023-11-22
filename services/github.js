@@ -1,7 +1,6 @@
 const { get } = require("axios").default;
 
 class GithubService {
-  
     async getRepos() {
     const { data } = await get(`https://api.github.com/orgs/NucleoidJS/repos`);
     return data.map((repo) => repo.name);
@@ -23,4 +22,3 @@ class GithubService {
 }
 
 module.exports = GithubService;
-

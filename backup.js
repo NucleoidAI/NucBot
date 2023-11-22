@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { execSync } = require("child_process");
-const GithubService = require('./githubService.js');
+const GithubService = require('./services/github.js');
 
 const githubService = new GithubService(); 
 

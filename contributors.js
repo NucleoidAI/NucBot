@@ -1,4 +1,4 @@
-const GithubService = require("./githubService");
+const GithubService = require("./services/github.js");
 const discordContributors = require("./discord.json");
 
 const githubService = new GithubService();
