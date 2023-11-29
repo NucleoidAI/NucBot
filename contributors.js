@@ -1,30 +1,14 @@
-const { get } = require("axios").default;
+const GithubService = require("./services/github.js");
 const discordContributors = require("./discord.json");
 
-const repos = ["Nucleoid", "IDE", "nucleoid.com", "docs"];
+const githubService = new GithubService();
+
 const contributors = [
   {
     id: 110643717,
     login: "NucBot",
   },
 ];
-
-const getContributors = async (repo) => {
-  const { data } = await get(
-    `https://api.github.com/repos/NucleoidJS/${repo}/contributors`
-  );
-
-  contributors.push(...data);
-};
-
-const getContributorsFromIssues = async (repo) => {
-  const { data } = await get(
-    `https://api.github.com/repos/NucleoidJS/${repo}/issues`
-  );
-
-  const users = data.map((issue) => issue.user);
-  contributors.push(...users);
-};
 
 const generateTable = (contributors) => {
   let i = 1;
@@ -50,9 +34,13 @@ const generateTable = (contributors) => {
 };
 
 async function generate() {
+  const repos = await githubService.getRepos();
+  
   for (const repo of repos) {
-    await getContributors(repo);
-    await getContributorsFromIssues(repo);
+    const repoContributors = await githubService.getContributors(repo);
+    const issueContributors = await githubService.getIssues(repo);
+
+    contributors.push(...repoContributors, ...issueContributors);
   }
 
   contributors.push(...discordContributors);
@@ -66,3 +54,4 @@ async function generate() {
 }
 
 generate().then((table) => console.log(table));
+
