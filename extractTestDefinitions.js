@@ -7,6 +7,9 @@ const execSync = require("child_process").execSync;
 const tempDir = os.tmpdir();
 const folderId = uuidv4();
 const repoDir = path.join(tempDir, folderId);
+const outputFileName = process.argv[2]
+  ? process.argv[2] + ".txt"
+  : "output.txt";
 
 execSync(`git clone https://github.com/NucleoidJS/Nucleoid ${repoDir}`);
 
@@ -63,4 +66,6 @@ function extractTestDescriptions(testData) {
 
 const formattedDescriptions = extractTestDescriptions(testData);
 
-fs.writeFileSync("output.txt", formattedDescriptions);
+fs.writeFileSync(outputFileName, formattedDescriptions);
+
+console.log(`Output written to ${outputFileName}`);
