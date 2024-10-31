@@ -1,0 +1,38 @@
+const packageJson = (name) => ({
+  name,
+  private: true,
+  version: "0.0.1",
+  type: "module",
+  scripts: {
+    dev: "vite",
+    "dev:cy": "cypress open",
+    test: "exit 0",
+    build: "vite build",
+    "cypress:open": "cypress open --e2e --browser chrome",
+    "cypress:run": "cypress run",
+    lint: "eslint . --ext js,jsx --max-warnings 0",
+    preview: "vite preview",
+    storybook: "storybook dev -p 6006",
+    "build:storybook": "storybook build",
+  },
+  dependencies: {
+    "@emotion/css": "^11.11.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.16.4",
+    "@mui/material": "^5.16.4",
+    "@mui/styled-engine-sc": "^5.14.12",
+    "@nucleoidai/platform": "^1.0.28",
+    "@nucleoidai/react-event": "^1.1.7",
+    "@nucleoidjs/webstorage": "^1.0.5",
+    axios: "^1.7.2",
+    "axios-auth-refresh": "^3.3.6",
+    "axios-retry": "^3.5.0",
+    react: "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.1",
+    "styled-components": "^5.3.10",
+  },
+});
+
+module.exports = packageJson;
