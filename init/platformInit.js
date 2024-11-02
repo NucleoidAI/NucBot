@@ -4,53 +4,50 @@ const fs = require("fs");
 const path = require("path");
 const uuid = require("uuid");
 
-const generateConfigs = require("../template/platform/generateConfigs");
-const eslintrcContent = require("../template/platform/eslintrc");
-const prettierContent = require("../template/platform/prettier");
-const packageJson = require("../template/platform/packageJson");
+const copyDirectory = (src, dest, projectName, appId) => {
+  if (!fs.existsSync(dest)) {
+    fs.mkdirSync(dest);
+  }
 
-const createDirectoryStructure = (projectName, template) => {
-  fs.mkdirSync(projectName);
+  const entries = fs.readdirSync(src, { withFileTypes: true });
 
-  fs.mkdirSync(path.join(projectName, "src"));
+  for (const entry of entries) {
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
 
-  if (template === "platform") {
+    if (entry.isDirectory()) {
+      copyDirectory(srcPath, destPath, projectName, appId);
+    } else {
+      let content = fs.readFileSync(srcPath, "utf8");
+
+      content = content
+        .replace(/\{\{projectName\}\}/g, projectName)
+        .replace(/\{\{appId\}\}/g, appId);
+
+      fs.writeFileSync(destPath, content);
+    }
+  }
+};
+
+const createProjectFromTemplate = (projectName, template) => {
+  try {
     const appId = uuid.v4();
 
-    const { dev, land, live } = generateConfigs(projectName, appId);
-    const packageJsonContent = packageJson(projectName);
+    const templatePath = path.join(__dirname, "..", "templates", template);
 
-    fs.writeFileSync(path.join(projectName, "config.js"), dev);
-    fs.writeFileSync(path.join(projectName, "config.land.js"), land);
-    fs.writeFileSync(path.join(projectName, "config.live.js"), live);
+    const projectPath = path.join(process.cwd(), projectName);
 
-    fs.writeFileSync(path.join(projectName, ".prettierrc"), prettierContent);
-    fs.writeFileSync(path.join(projectName, ".eslintrc.json"), eslintrcContent);
+    if (fs.existsSync(projectPath)) {
+      throw new Error(`Directory ${projectName} already exists`);
+    }
 
-    fs.mkdirSync(path.join(projectName, "src", "components"));
-    fs.mkdirSync(path.join(projectName, "src", "widgets"));
-    fs.mkdirSync(path.join(projectName, "src", "layouts"));
-    fs.mkdirSync(path.join(projectName, "src", "pages"));
+    copyDirectory(templatePath, projectPath, projectName, appId);
 
-    fs.writeFileSync(
-      path.join(projectName, "package.json"),
-      JSON.stringify(packageJsonContent, null, 2)
-    );
+    return true;
+  } catch (error) {
+    console.error(chalk.red("Error creating project:", error.message));
+    return false;
   }
-
-  if (template === "platform-express") {
-    //TODO
-  }
-
-  const gitignoreContent = `node_modules
-.env
-`;
-
-  fs.writeFileSync(path.join(projectName, ".gitignore"), gitignoreContent);
-  fs.writeFileSync(
-    path.join(projectName, ".gitattributes"),
-    `* text=auto eol=lf`
-  );
 };
 
 const handlePlatformInit = async () => {
@@ -76,24 +73,25 @@ const handlePlatformInit = async () => {
     switch (answers.option) {
       case "platform":
         console.log(chalk.green("Initializing platform..."));
-        createDirectoryStructure(answers.name, "platform");
-        console.log(
-          chalk.green(`
+        if (createProjectFromTemplate(answers.name, "platform")) {
+          console.log(
+            chalk.green(`
 Successfully created platform project: ${answers.name}
 
 To get started:
   cd ${answers.name}
   npm install
-  npm start
+  npm run dev
 `)
-        );
+          );
+        }
         break;
 
       case "platform-express":
         console.log(chalk.blue("Initializing platform-express..."));
-        createDirectoryStructure(answers.name, "platform-express");
-        console.log(
-          chalk.blue(`
+        if (createProjectFromTemplate(answers.name, "platform-express")) {
+          console.log(
+            chalk.blue(`
 Successfully created platform-express project: ${answers.name}
 
 To get started:
@@ -101,7 +99,8 @@ To get started:
   npm install
   npm start
 `)
-        );
+          );
+        }
         break;
     }
   } catch (error) {
