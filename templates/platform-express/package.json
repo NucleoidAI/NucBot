@@ -1,0 +1,25 @@
+{
+  "name": "api.greycollar.ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "NucTeam",
+  "scripts": {
+    "prepare": "exit 0",
+    "dev": "node server --dev",
+    "lint": "eslint . --ext .js",
+    "test": "mocha 'src/**/*.spec.js'"
+  },
+  "dependencies": {
+    "@nucleoidai/platform-express": "^1.5.26"
+  },
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "mocha": "10.1.0",
+    "prettier": "^2.6.2",
+    "sqlite3": "^5.1.7",
+    "supertest": "^6.2.3"
+  }
+}
