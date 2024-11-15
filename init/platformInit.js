@@ -1,6 +1,6 @@
 const chalk = require("chalk");
 const inquirer = require("inquirer");
-const createProjectFromTemplate = require("../utils/createProjectFromTemplate");
+const createProject = require("../utils/createProject");
 
 const handlePlatformInit = async () => {
   try {
@@ -25,7 +25,7 @@ const handlePlatformInit = async () => {
     switch (answers.option) {
       case "platform":
         console.log(chalk.green("Initializing platform..."));
-        if (createProjectFromTemplate(answers.name, "platform")) {
+        if (createProject(answers.name, "platform")) {
           console.log(
             chalk.green(`
 Successfully created platform project: ${answers.name}
@@ -41,7 +41,7 @@ To get started:
 
       case "platform-express":
         console.log(chalk.blue("Initializing platform-express..."));
-        if (createProjectFromTemplate(answers.name, "platform-express")) {
+        if (createProject(answers.name, "platform-express")) {
           console.log(
             chalk.blue(`
 Successfully created platform-express project: ${answers.name}
