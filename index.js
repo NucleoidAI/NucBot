@@ -2,7 +2,8 @@ const chalk = require("chalk");
 const { program } = require("commander");
 
 const handlePlatformInit = require("./init/platformInit");
-const createProjectFromTemplate = require("./utils/createProjectFromTemplate");
+const createProject = require("./utils/createProject");
+const updateProject = require("./utils/updateProject");
 
 program.name("nucbot").description("Nucbot CLI tool").version("1.0.0");
 
@@ -15,9 +16,17 @@ program
     if (!options.platform && !options.name) {
       handlePlatformInit();
     } else {
-      createProjectFromTemplate(options.name, options.platform);
+      createProject(options.name, options.platform);
     }
   });
+
+program
+.command("update")
+.description("Update project")
+.action(() => {
+  updateProject("platform");
+  console.log("Updating project components...");
+});
 
 program.on("command:*", () => {
   console.error(chalk.red("Invalid command."));
