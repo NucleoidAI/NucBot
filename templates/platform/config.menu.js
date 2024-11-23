@@ -1,5 +1,3 @@
-import OrganizationButton from "./src/widgets/OrganizationButton/index.js";
-
 const menuConfig = {
   topMenu: [],
   sideMenu: [
