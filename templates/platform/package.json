@@ -1,5 +1,5 @@
 {
-  "name": "{{name}}"",
+  "name": "{{projectName}}",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,9 +11,7 @@
     "cypress:open": "cypress open --e2e --browser chrome",
     "cypress:run": "cypress run",
     "lint": "eslint . --ext js,jsx --max-warnings 0",
-    "preview": "vite preview",
-    "storybook": "storybook dev -p 6006",
-    "build:storybook": "storybook build"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@cypress/vite-dev-server": "^5.1.1",
@@ -36,5 +34,9 @@
     "react-helmet-async": "^2.0.5",
     "react-router-dom": "^6.11.1",
     "styled-components": "^5.3.10",
-  },
+    "vite": "^4.3.2",
+    "vite-plugin-svgr": "^3.2.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "react-organizational-chart": "^2.2.1"
+  }
 }
