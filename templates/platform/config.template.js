@@ -11,7 +11,7 @@ const templateConfig = {
     largeIcon: "https://cdn.nucleoid.com/media/icon.png",
   },
   projectBar: {
-    label: "Team",
+    label: "Project",
   },
 };
 

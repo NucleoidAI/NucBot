@@ -5,14 +5,14 @@ const menuConfig = {
       subheader: "Colleague",
       items: [
         {
-          title: "Colleagues",
+          title: "Index",
           icon: "solar:chart-line-duotone",
-          path: "/colleagues",
+          path: "/platform",
         },
         {
-          title: "Chat",
-          icon: "ic:baseline-chat",
-          path: "/chat",
+          title: "Full Screen",
+          icon: "solar:full-screen-circle-bold-duotone",
+          path: "/full-screen/page",
         },
       ],
     },

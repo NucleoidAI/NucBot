@@ -3,6 +3,10 @@ import {
   FullScreenLayout,
 } from "@nucleoidai/platform/layouts";
 
+import Container from "./src/Container";
+import FullScreen from "./src/pages/FullScreen";
+import Index from "./src/pages/Index";
+
 const routes = [
   {
     container: <Container />,
@@ -10,15 +14,15 @@ const routes = [
       {
         layout: <DashboardLayout />,
         pages: [
-          {
-            path: "/",
-            element:<>Hi</>,
+          { 
+            path: "/platform",
+            element:<Index />,
           },
         ],
       },
       {
         layout: <FullScreenLayout />,
-        pages: [{ path: "/chat", element: <>Hi</>}],
+        pages: [{ path: "/full-screen/page", element: <FullScreen/>}],
       },
     ],
   },
