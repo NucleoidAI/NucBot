@@ -40,7 +40,7 @@ This will start an interactive prompt to guide you through project creation.
 
 2. Direct Mode:
 ```bash
-nucbot init -platform <platform> -name <project-name>
+nucbot init --platform <platform> --name <project-name>
 ```
 
 Options:
@@ -49,12 +49,12 @@ Options:
 
 Example:
 ```bash
-nucbot init --platform platform --name deneme      
+nucbot init --platform platform --name nucleoid_app      
 ```
 
-### Update Project Components
+### Update Project
 
-To update your existing project's components and dependencies:
+To update your existing project's configuration, run the following command:
 
 ```bash
 nucbot update
