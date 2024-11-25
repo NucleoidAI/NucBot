@@ -2,7 +2,7 @@ const menuConfig = {
   topMenu: [],
   sideMenu: [
     {
-      subheader: "Colleague",
+      subheader: "Routes",
       items: [
         {
           title: "Index",
