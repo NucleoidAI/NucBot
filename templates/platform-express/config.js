@@ -9,7 +9,7 @@ const config = {
   },
   link: {
     project: {
-      label: "Team",
+      label: "Project",
     },
   },
   postgres: {
