@@ -5,7 +5,7 @@
   "main": "index.js",
   "author": "NucTeam",
   "scripts": {
-    "prepare": "exit 0",
+    "prepare": "node prepare.js",
     "dev": "node server --dev",
     "lint": "eslint . --ext .js",
     "test": "mocha 'src/**/*.spec.js'"
