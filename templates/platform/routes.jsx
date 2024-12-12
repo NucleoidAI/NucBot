@@ -1,6 +1,6 @@
 import {
-  DashboardLayout,
-  FullScreenLayout,
+  {{layout1}},
+  {{layout2}},
 } from "@nucleoidai/platform/layouts";
 
 import Container from "./src/Container";
@@ -12,16 +12,16 @@ const routes = [
     container: <Container />,
     childs: [
       {
-        layout: <DashboardLayout />,
+        layout: <{{layout1}}  />,
         pages: [
           { 
-            path: "/platform",
+            path: "/",
             element:<Index />,
           },
         ],
       },
       {
-        layout: <FullScreenLayout />,
+        layout: <{{layout2}} />,
         pages: [{ path: "/full-screen/page", element: <FullScreen/>}],
       },
     ],
