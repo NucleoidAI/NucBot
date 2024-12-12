@@ -11,7 +11,7 @@
     "test": "mocha 'src/**/*.spec.js'"
   },
   "dependencies": {
-    "@nucleoidai/platform-express": "^1.5.26"
+    "@nucleoidai/platform-express": "^1.5.34"
   },
   "devDependencies": {
     "eslint": "^8.16.0",
