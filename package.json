@@ -1,32 +1,26 @@
 {
   "name": "nucbot",
   "version": "1.0.0",
-  "description": "NucBot",
-  "main": "index.js",
+  "description": "NucBot CLI",
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "nucbot": "./src/cli.ts"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NucleoidJS/template-node.git"
-  },
-  "author": "Nuc Team",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/NucleoidJS/template-node/issues"
-  },
-  "homepage": "https://github.com/NucleoidJS/template-node#readme",
-  "dependencies": {
-    "axios": "^0.27.2",
-    "chalk": "^4.1.0",
-    "commander": "^12.1.0",
-    "inquirer": "^12.0.1",
-    "uuid": "^9.0.1"
+    "dev": "bun run src/cli.ts",
+    "build": "bun scripts/build.ts",
+    "build:local": "bun build src/cli.ts --compile --outfile dist/nucbot",
+    "lint": "bunx tsc --noEmit"
   },
   "devDependencies": {
-    "eslint": "^8.12.0",
-    "eslint-config-prettier": "^8.5.0",
-    "mocha": "^9.2.2",
-    "prettier": "^2.6.2"
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "yaml": "^2.9.0"
   }
 }

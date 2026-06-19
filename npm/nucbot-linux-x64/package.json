@@ -1,0 +1,10 @@
+{
+  "name": "nucbot-linux-x64",
+  "version": "1.0.0",
+  "description": "nucbot binary for linux x64",
+  "os": ["linux"],
+  "cpu": ["x64"],
+  "bin": { "nucbot": "nucbot-linux-x64" },
+  "files": ["nucbot-linux-x64"],
+  "license": "Apache-2.0"
+}
