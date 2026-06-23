@@ -1,2 +1,28 @@
-node_modules/
-.idea/
+# dependencies (bun install)
+node_modules
+
+# output
+out
+dist
+*.tgz
+
+# logs
+logs
+_.log
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# caches
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store

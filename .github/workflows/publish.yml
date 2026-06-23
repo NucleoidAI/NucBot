@@ -1,0 +1,90 @@
+name: Publish NPM Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Compute version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG="${{ github.event.release.tag_name }}"
+            NEW_VERSION="${TAG#v}"
+          else
+            NEW_VERSION=$(node -e "
+              const [maj, min, pat] = require('./package.json').version.split('.').map(Number);
+              const t = '${{ github.event.inputs.version_type }}';
+              if (t === 'major') process.stdout.write(\`\${maj+1}.0.0\`);
+              else if (t === 'minor') process.stdout.write(\`\${maj}.\${min+1}.0\`);
+              else process.stdout.write(\`\${maj}.\${min}.\${pat+1}\`);
+            ")
+          fi
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Bump version
+        run: |
+          VERSION="${{ steps.version.outputs.NEW_VERSION }}"
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = '$VERSION';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+
+      - name: Publish to NPM
+        run: npm publish .
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Commit and tag
+        run: |
+          VERSION="${{ steps.version.outputs.NEW_VERSION }}"
+          git add package.json
+          git commit -m "Bump version to $VERSION [skip ci]"
+          git tag "v$VERSION"
+          git push --follow-tags
+
+      - name: Notify Slack
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: https://hooks.slack.com/services/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
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "Successfully published nucbot@${{ steps.version.outputs.NEW_VERSION }}"
+            }

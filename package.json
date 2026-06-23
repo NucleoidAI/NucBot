@@ -1,32 +1,29 @@
 {
   "name": "nucbot",
-  "version": "1.0.0",
-  "description": "NucBot",
-  "main": "index.js",
+  "version": "1.1.1",
+  "description": "Nucleoid project bootstrapper CLI",
+  "bin": {
+    "nucbot": "./src/cli.ts"
+  },
+  "files": [
+    "src/"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "bun run src/cli.ts",
+    "lint": "bunx tsc --noEmit"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NucleoidJS/template-node.git"
-  },
-  "author": "Nuc Team",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/NucleoidJS/template-node/issues"
-  },
-  "homepage": "https://github.com/NucleoidJS/template-node#readme",
   "dependencies": {
-    "axios": "^0.27.2",
-    "chalk": "^4.1.0",
-    "commander": "^12.1.0",
-    "inquirer": "^12.0.1",
-    "uuid": "^9.0.1"
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
-    "eslint": "^8.12.0",
-    "eslint-config-prettier": "^8.5.0",
-    "mocha": "^9.2.2",
-    "prettier": "^2.6.2"
+    "@types/bun": "latest"
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NucleoidAI/NucBot"
   }
 }
