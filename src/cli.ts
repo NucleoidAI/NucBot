@@ -61,26 +61,27 @@ Commands:
             -p, --port <port>   HTTP port (default: 3000)
             -t, --token         Auth token (or NUCBOT_TOKEN env)
 
-  bridge    Trello ↔ Slack bridge
-            Opens a Slack thread when a card moves to In Progress,
-            posts the PR link when it moves to In Review, sends
-            staleness warnings and a daily EOD report.
-            --setup             Register Trello webhook and exit
-            -p, --port <port>   HTTP port (default: 3001)
-            --db <path>         SQLite db path (default: .nucbot/bridge.db)
+  sync      One-way GitHub → GitLab commit sync
+            Listens for GitHub push webhooks and cherry-picks each
+            new commit onto GitLab, preserving the commit message
+            but replacing author info with the local git identity.
+            --setup              Print webhook setup instructions and exit
+            -p, --port <port>    HTTP port (default: 3002)
+            -b, --branch <name>  Branch to sync (default: main)
+            -s, --secret <val>   GitHub webhook secret (or SYNC_WEBHOOK_SECRET)
+            --github-url <url>   Source GitHub repo URL (or SYNC_GITHUB_URL)
+            --gitlab-url <url>   Target GitLab repo URL (or SYNC_GITLAB_URL)
+            --work-dir <path>        Local clone path (default: .nucbot/sync-repo)
+            --author-name <name>     Committer name on GitLab (or SYNC_AUTHOR_NAME)
+            --author-email <email>   Committer email on GitLab (or SYNC_AUTHOR_EMAIL)
 
             Required env vars:
-              TRELLO_API_KEY, TRELLO_TOKEN, TRELLO_BOARD_ID
-              SLACK_BOT_TOKEN, SLACK_CHANNEL_ID
+              SYNC_GITHUB_URL, SYNC_GITLAB_URL
 
             Optional env vars:
-              TRELLO_SECRET                    Webhook signature secret
-              BRIDGE_PUBLIC_URL                Public URL for webhook registration
-              BRIDGE_LIST_IN_PROGRESS          (default: "In Progress")
-              BRIDGE_LIST_IN_REVIEW            (default: "In Review")
-              BRIDGE_STALE_IN_PROGRESS_HOURS   (default: 48)
-              BRIDGE_STALE_IN_REVIEW_HOURS     (default: 24)
-              BRIDGE_REPORT_TIME               (default: "18:00")
+              SYNC_WEBHOOK_SECRET   GitHub webhook signature secret
+              SYNC_AUTHOR_NAME      Committer name written to GitLab commits
+              SYNC_AUTHOR_EMAIL     Committer email written to GitLab commits
 
 Options:
   -h, --help     Show help
@@ -91,8 +92,8 @@ Examples:
   nucbot init --template link --name my-app
   nucbot init -t link-express -n my-api --login
   nucbot watcher --file ./docker-compose.yml
-  nucbot bridge --setup
-  nucbot bridge
+  nucbot sync --github-url https://github.com/org/repo.git --gitlab-url https://oauth2:TOKEN@gitlab.com/org/repo.git
+  nucbot sync --setup
 `.trim(),
   );
 }
