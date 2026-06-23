@@ -28,9 +28,6 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -42,9 +39,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Install dependencies
-        run: bun install
-
       - name: Compute version
         id: version
         run: |
@@ -53,7 +47,7 @@ jobs:
             NEW_VERSION="${TAG#v}"
           else
             NEW_VERSION=$(node -e "
-              const [maj, min, pat] = require('./npm/nucbot/package.json').version.split('.').map(Number);
+              const [maj, min, pat] = require('./package.json').version.split('.').map(Number);
               const t = '${{ github.event.inputs.version_type }}';
               if (t === 'major') process.stdout.write(\`\${maj+1}.0.0\`);
               else if (t === 'minor') process.stdout.write(\`\${maj}.\${min+1}.0\`);
@@ -62,54 +56,25 @@ jobs:
           fi
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Bump versions in npm packages
+      - name: Bump version
         run: |
           VERSION="${{ steps.version.outputs.NEW_VERSION }}"
-          for dir in npm/nucbot npm/nucbot-darwin-arm64 npm/nucbot-darwin-x64 npm/nucbot-linux-x64 npm/nucbot-linux-arm64; do
-            node -e "
-              const fs = require('fs');
-              const pkg = JSON.parse(fs.readFileSync('$dir/package.json', 'utf8'));
-              pkg.version = '$VERSION';
-              if (pkg.optionalDependencies) {
-                for (const k of Object.keys(pkg.optionalDependencies)) {
-                  pkg.optionalDependencies[k] = '$VERSION';
-                }
-              }
-              fs.writeFileSync('$dir/package.json', JSON.stringify(pkg, null, 2) + '\n');
-            "
-          done
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = '$VERSION';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
 
-      - name: Build binaries
-        run: bun scripts/build.ts
-
-      - name: Copy binaries to npm packages
-        run: |
-          cp dist/nucbot-linux-x64    npm/nucbot-linux-x64/nucbot-linux-x64
-          cp dist/nucbot-linux-arm64  npm/nucbot-linux-arm64/nucbot-linux-arm64
-          cp dist/nucbot-darwin-x64   npm/nucbot-darwin-x64/nucbot-darwin-x64
-          cp dist/nucbot-darwin-arm64 npm/nucbot-darwin-arm64/nucbot-darwin-arm64
-          chmod +x npm/nucbot-linux-x64/nucbot-linux-x64
-          chmod +x npm/nucbot-linux-arm64/nucbot-linux-arm64
-          chmod +x npm/nucbot-darwin-x64/nucbot-darwin-x64
-          chmod +x npm/nucbot-darwin-arm64/nucbot-darwin-arm64
-
-      - name: Publish platform packages
-        run: |
-          for dir in npm/nucbot-linux-x64 npm/nucbot-linux-arm64 npm/nucbot-darwin-x64 npm/nucbot-darwin-arm64; do
-            npm publish $dir --access public
-          done
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish main package
-        run: npm publish npm/nucbot --access public
+      - name: Publish to NPM
+        run: npm publish .
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Commit and tag
         run: |
           VERSION="${{ steps.version.outputs.NEW_VERSION }}"
-          git add npm/*/package.json
+          git add package.json
           git commit -m "Bump version to $VERSION [skip ci]"
           git tag "v$VERSION"
           git push --follow-tags
